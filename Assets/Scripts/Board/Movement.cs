@@ -71,6 +71,10 @@ public class Movement : MonoBehaviour
         halfwayPos.y += 0.5f;
         float tempTime = 0;
 
+        if (actualTile.floor.tilemap.tileAnchor.y < t.floor.tilemap.tileAnchor.y)
+        {
+            sr.sortingOrder = t.contentOrder;
+        }
         while (jumper.localPosition != halfwayPos)
         {
             tempTime += Time.deltaTime;

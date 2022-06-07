@@ -24,6 +24,7 @@ public class Board : MonoBehaviour
     {
         LoadFloors();
         Debug.Log("Foram criados " + tiles.Count + " tiles");
+        ShadowOrdering();
     }
 
     void LoadFloors()
@@ -47,6 +48,35 @@ public class Board : MonoBehaviour
         worldPos.y += (floor.tilemap.tileAnchor.y / 2) - 0.5f;
         TileLogic tileLogic = new TileLogic(pos, worldPos, floor);
         tiles.Add(pos, tileLogic);
+    }
+
+    void ShadowOrdering()
+    {
+        foreach (TileLogic t in tiles.Values)
+        {
+            int floorIndex = floors.IndexOf(t.floor);
+            floorIndex -= 2;
+
+            if (floorIndex >= floors.Count || floorIndex < 0)
+            {
+                continue;
+            }
+            Floor floorToCheck = floors[floorIndex];
+
+            Vector3Int pos = t.pos;
+
+            IsNECheck(floorToCheck, t, pos + Vector3Int.right);
+            IsNECheck(floorToCheck, t, pos + Vector3Int.up);
+            IsNECheck(floorToCheck, t, pos + Vector3Int.right + Vector3Int.up);
+        }
+    }
+
+    void IsNECheck(Floor floor, TileLogic t, Vector3Int NEPosition)
+    {
+        if (floor.tilemap.HasTile(NEPosition))
+        {
+            t.contentOrder = floor.order;
+        }
     }
 
 
